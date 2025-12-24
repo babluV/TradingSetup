@@ -9,7 +9,7 @@ interface MorningSetupProps {
   marketStatus?: 'pre-market' | 'open' | 'closed';
 }
 
-export default function MorningSetupPanel({ 
+export default function MorningSetupComponent({ 
   setup, 
   currentTime, 
   currentPrice = 0,

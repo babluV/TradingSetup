@@ -123,8 +123,8 @@ export function analyzeMultiTimeframe(data15m: CandlestickData[], data1h: Candle
     recommendations.push('💡 Monitor for alignment - Trade when 2+ timeframes align');
   }
 
-  // Add original recommendations from 1d timeframe (most important)
-  setup1d.recommendations.forEach(rec => {
+  // Add original reasoning from 1d timeframe (most important)
+  setup1d.reasoning.forEach(rec => {
     if (!recommendations.includes(rec)) {
       recommendations.push(rec);
     }
@@ -145,15 +145,9 @@ export function analyzeMultiTimeframe(data15m: CandlestickData[], data1h: Candle
     suggestion,
     confidence: Math.round(overallConfidence),
     keyLevels: setup1d.keyLevels,
-    analysis: {
-      emaSignal: `Multi-Timeframe: ${setup1d.analysis.emaSignal}`,
-      rsiSignal: `15m:${setup15m.analysis.rsiSignal} | 1h:${setup1h.analysis.rsiSignal} | 1d:${setup1d.analysis.rsiSignal}`,
-      volumeSignal: setup1d.analysis.volumeSignal,
-      priceAction: setup1d.analysis.priceAction,
-    },
-    recommendations,
-    riskLevel,
-    timeframeAnalysis,
+    reasoning: recommendations,
+    preMarketAnalysis: setup1d.preMarketAnalysis,
+    tradingStrategy: setup1d.tradingStrategy,
   };
 }
 
