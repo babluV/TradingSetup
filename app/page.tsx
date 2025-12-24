@@ -1053,7 +1053,7 @@ export default function Home() {
           <div className="mb-2 rounded-lg p-3 bg-blue-50 border border-blue-200">
             <div className="flex items-center justify-center gap-2">
               <div className="text-lg font-bold text-blue-800">
-                📊 Today's Activity - {globalMarketData.fiiDii.date ? 
+                📊 Today&apos;s Activity - {globalMarketData.fiiDii.date ? 
                   new Date(globalMarketData.fiiDii.date).toLocaleDateString('en-IN', { 
                     weekday: 'long', 
                     year: 'numeric', 

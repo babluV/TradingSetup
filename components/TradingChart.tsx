@@ -34,14 +34,17 @@ export default function TradingChart({
       return;
     }
 
+    // Capture ref value for cleanup function
+    const chartContainer = chartContainerRef.current;
+
     try {
       // Create chart with responsive sizing
-      const chart = createChart(chartContainerRef.current, {
+      const chart = createChart(chartContainer, {
         layout: {
           background: { type: ColorType.Solid, color: 'white' },
           textColor: 'black',
         },
-        width: chartContainerRef.current.clientWidth,
+        width: chartContainer.clientWidth,
         height: 600,
         autoSize: true,
         handleScroll: {
@@ -93,10 +96,10 @@ export default function TradingChart({
     candlestickSeriesRef.current = candlestickSeries;
 
     // Set up ResizeObserver for automatic resizing
-    if (chartContainerRef.current) {
+    if (chartContainer) {
       resizeObserverRef.current = new ResizeObserver((entries) => {
         for (const entry of entries) {
-          if (chart && entry.target === chartContainerRef.current) {
+          if (chart && entry.target === chartContainer) {
             const { width, height } = entry.contentRect;
             chart.applyOptions({
               width: width,
@@ -106,14 +109,14 @@ export default function TradingChart({
         }
       });
       
-      resizeObserverRef.current.observe(chartContainerRef.current);
+      resizeObserverRef.current.observe(chartContainer);
     }
 
     // Handle window resize as fallback
     const handleResize = () => {
-      if (chartContainerRef.current && chart) {
+      if (chartContainer && chart) {
         chart.applyOptions({
-          width: chartContainerRef.current.clientWidth,
+          width: chartContainer.clientWidth,
         });
       }
     };
@@ -124,8 +127,8 @@ export default function TradingChart({
     const markInteraction = () => {
       userInteractedRef.current = true;
     };
-    chartContainerRef.current.addEventListener('wheel', markInteraction, { passive: true });
-    chartContainerRef.current.addEventListener('mousedown', markInteraction);
+    chartContainer.addEventListener('wheel', markInteraction, { passive: true });
+    chartContainer.addEventListener('mousedown', markInteraction);
 
       return () => {
         window.removeEventListener('resize', handleResize);
@@ -133,8 +136,8 @@ export default function TradingChart({
           resizeObserverRef.current.disconnect();
           resizeObserverRef.current = null;
         }
-        chartContainerRef.current?.removeEventListener('wheel', markInteraction);
-        chartContainerRef.current?.removeEventListener('mousedown', markInteraction);
+        chartContainer?.removeEventListener('wheel', markInteraction);
+        chartContainer?.removeEventListener('mousedown', markInteraction);
         if (scrollTimeoutRef.current) {
           clearTimeout(scrollTimeoutRef.current);
           scrollTimeoutRef.current = null;
