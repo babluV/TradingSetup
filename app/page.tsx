@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import TradingChart from '@/components/TradingChart';
 import TradingPanel from '@/components/TradingPanel';
 import TradesList from '@/components/TradesList';
@@ -739,7 +739,7 @@ export default function Home() {
         }
       }, 0); // Run on next tick to not block render
     }
-  }, [candlestickData, optionChainSummary]);
+  }, [candlestickData, optionChainSummary, globalMarketData]);
 
   // Recalculate enhanced prediction when option chain data or global markets become available
   useEffect(() => {
@@ -851,7 +851,7 @@ export default function Home() {
         };
       })
     );
-  }, [currentPrice, openTrades.length]);
+  }, [currentPrice, openTrades]);
 
   const handleTradeExecute = useCallback((trade: Omit<OptionTrade, 'id' | 'entryTime' | 'status'>) => {
     const newTrade: OptionTrade = {
@@ -938,7 +938,8 @@ export default function Home() {
     }, 100); // Very short delay to allow initial useEffect to run first
     
     return () => clearTimeout(timer);
-  }, [selectedTimeframe]); // Include selectedTimeframe in dependencies
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTimeframe]); // Only re-run when timeframe changes, not when data changes (to avoid loops)
   
   if (!hasData && isLoading) {
     return (
@@ -1501,7 +1502,7 @@ export default function Home() {
                     <div className="font-bold">{(nextDayPrediction.resistanceLevel || 0).toFixed(2)}</div>
                   </div>
                 </div>
-                {nextDayPrediction.orderRecommendations.type === 'PUT' && (
+                {nextDayPrediction.orderRecommendations?.type === 'PUT' && (
                   <div className="mt-3 pt-3 border-t border-red-400">
                     <div className="text-xs opacity-90 mb-2">📋 ORDER RECOMMENDATION</div>
                     <div className="grid grid-cols-4 gap-2 text-xs">
